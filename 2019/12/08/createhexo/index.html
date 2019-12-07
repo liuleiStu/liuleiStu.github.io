@@ -20,15 +20,14 @@
 <meta property="og:site_name" content="菜鸟逆袭日记">
 <meta property="og:description" content="这篇文章主要讲解，依托于github，搭建一个属于自己的炫酷博客网站如果觉得自己可以，可直接参照hexo官网hexo官方文档，否则还是按部就班看我接下来的内容  1、下载安装nodejs(之前如果下载并安装完毕跳过)注意：hexo需要的nodejs版本需不低于 8.6，建议使用 Node.js 10.0 及以上版本  nodejs官方下载地址   点击上方链接，根据自己电脑环境，下载对应版本，本">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https:&#x2F;&#x2F;graph.baidu.com&#x2F;resource&#x2F;1119a81c02e192ee3303101575741635.jpg">
-<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;08&#x2F;createhexo&#x2F;images&#x2F;1575737457045.png">
-<meta property="og:image" content="https:&#x2F;&#x2F;graph.baidu.com&#x2F;resource&#x2F;1117741d7f49dd175f1c901575741458.jpg">
-<meta property="og:image" content="https:&#x2F;&#x2F;graph.baidu.com&#x2F;resource&#x2F;11111483ec119eebafb8f01575741536.jpg">
-<meta property="og:image" content="https:&#x2F;&#x2F;graph.baidu.com&#x2F;resource&#x2F;111e8c94ab4ee2ff0135901575741571.jpg">
-<meta property="og:image" content="https:&#x2F;&#x2F;graph.baidu.com&#x2F;resource&#x2F;11138cceb9157042ca9bb01575741600.jpg">
-<meta property="og:updated_time" content="2019-12-07T18:00:55.602Z">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;createhexo&#x2F;newRes.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;createhexo&#x2F;hexozhuti.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;createhexo&#x2F;zhutisouye.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;createhexo&#x2F;zhutidizhi.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;createhexo&#x2F;anzhuang.png">
+<meta property="og:updated_time" content="2019-12-07T18:49:11.498Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https:&#x2F;&#x2F;graph.baidu.com&#x2F;resource&#x2F;1119a81c02e192ee3303101575741635.jpg">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;createhexo&#x2F;newRes.png">
 
   <meta name="format-detection" content="telephone=no,email=no">
   <meta name="theme-color" content="#9C27B0">
@@ -46,7 +45,7 @@
 
   
     <meta property="article:published_time" content="Sun Dec 08 2019 01:30:49 GMT+0800">
-    <meta property="article:modified_time" content="Sun Dec 08 2019 02:00:55 GMT+0800">
+    <meta property="article:modified_time" content="Sun Dec 08 2019 02:49:11 GMT+0800">
   
 
   
@@ -163,7 +162,7 @@
   <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
   <article class="mdui-card mdui-m-b-5">
     <header class="mdui-card-media">
-      <img src="/images/random/material-5.png" style="max-height: 240px;">
+      <img src="/images/random/material-15.png" style="max-height: 240px;">
       <div class="mdui-card-media-covered">
         <div class="mdui-card-primary">
           <div class="mdui-card-primary-title">从零搭建hexo私人博客</div>
@@ -256,7 +255,7 @@
 <ol start="13">
 <li><p>创建一个仓库new Repository</p>
 </li>
-<li><p>填写Repository name的时候，一定和前面的owner名字一致<br><img src="https://graph.baidu.com/resource/1119a81c02e192ee3303101575741635.jpg" alt="按照图示创建"></p>
+<li><p>填写Repository name的时候，一定和前面的owner名字一致<br><img src="/images/createhexo/newRes.png" alt="按照图示创建"></p>
 </li>
 <li><p>点击create就完成了仓库的创建</p>
 <h5 id="5、避免之后中文乱码问题"><a href="#5、避免之后中文乱码问题" class="headerlink" title="5、避免之后中文乱码问题"></a>5、避免之后中文乱码问题</h5><p>在步骤3中的第4步创建的文件夹下，有一个_config.yml文件，打开修改language: zh-CN，注意空格</p>
@@ -270,7 +269,7 @@
 </li>
 <li><p>在_config.yml中继续配置下面内容</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">deploy:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"> type: git</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"> repo: https:&#x2F;&#x2F;github.com&#x2F;&lt;username&gt;&#x2F;&lt;project&gt;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line"> # example, https:&#x2F;&#x2F;github.com&#x2F;hexojs&#x2F;hexojs.github.io</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line"> branch: master</span></pre></td></tr></table></figure>
-<p>改一下repo的内容就行，这里的username就是你的github的owner名字，比如我的就是repo: <a href="https://github.com/liuleiStu/liuleiStu.github.io" target="_blank" rel="noopener">https://github.com/liuleiStu/liuleiStu.github.io</a><br><img src="./images/1575737457045.png" alt="按照图示创建"></p>
+<p>改一下repo的内容就行，这里的username就是你的github的owner名字，比如我的就是repo: <a href="https://github.com/liuleiStu/liuleiStu.github.io" target="_blank" rel="noopener">https://github.com/liuleiStu/liuleiStu.github.io</a></p>
 </li>
 <li><p>继续在git界面下执行<strong>hexo clean &amp;&amp; hexo deploy</strong>命令，会出现输入github用户名和密码，然后就上传成功了</p>
 </li>
@@ -280,13 +279,13 @@
 </li>
 <li><p>这里可以挑选自己喜欢的样式，找到自己喜欢的主题后，在该主题中找到github仓库，按照仓库的步骤进行配置即可</p>
 </li>
-<li><p>比如进入hexo主题，选择这个主题<br><img src="https://graph.baidu.com/resource/1117741d7f49dd175f1c901575741458.jpg" alt="enter description here"></p>
+<li><p>比如进入hexo主题，选择这个主题<br><img src="/images/createhexo/hexozhuti.png" alt="enter description here"></p>
 </li>
-<li><p>在主题中寻找github地址<br><img src="https://graph.baidu.com/resource/11111483ec119eebafb8f01575741536.jpg" alt="enter description here"></p>
+<li><p>在主题中寻找github地址<br><img src="/images/createhexo/zhutisouye.png" alt="enter description here"></p>
 </li>
-<li><p>点击进入该github地址，找到存放hexo主题的仓库，点击进入<br><img src="https://graph.baidu.com/resource/111e8c94ab4ee2ff0135901575741571.jpg" alt="enter description here"></p>
+<li><p>点击进入该github地址，找到存放hexo主题的仓库，点击进入<br><img src="/images/createhexo/zhutidizhi.png" alt="enter description here"></p>
 </li>
-<li><p>就会看到下面的界面<br><img src="https://graph.baidu.com/resource/11138cceb9157042ca9bb01575741600.jpg" alt="enter description here"></p>
+<li><p>就会看到下面的界面<br><img src="/images/createhexo/anzhuang.png" alt="enter description here"></p>
 </li>
 <li><p>按照步骤进行配置即可</p>
 <h5 id="8、发布文章到自己的博客-之后更新"><a href="#8、发布文章到自己的博客-之后更新" class="headerlink" title="8、发布文章到自己的博客(之后更新)"></a>8、发布文章到自己的博客(之后更新)</h5></li>
