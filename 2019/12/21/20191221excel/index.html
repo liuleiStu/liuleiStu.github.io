@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="renderer" content="webkit">
+
+  
+  <title>POI读取大数据量Excel出现Java heap space | 菜鸟逆袭日记</title>
+
+  <link rel="shortcut icon" href="/images/favicon.png">
+  <link rel="alternate" href="/atom.xml" title="菜鸟逆袭日记">
+  <meta name="description" content="该篇文章处理的Excel格式为xlsx格式  前几天，在读取一个数据量在28W多行的Excel的时候，在加载Excel的时候，报出了OutOfMemoryError：Java heap space的异常，出现这个问题的原因是使用POI读取Excel的时候，会创建大量的String对象，并且空的表格数据也会创建String对象，需要把所有的Excel一下全部加载到内存才会进行接下来的操作，就导致出">
+<meta name="keywords" content="Excel">
+<meta property="og:type" content="article">
+<meta property="og:title" content="POI读取大数据量Excel出现Java heap space">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;21&#x2F;20191221excel&#x2F;index.html">
+<meta property="og:site_name" content="菜鸟逆袭日记">
+<meta property="og:description" content="该篇文章处理的Excel格式为xlsx格式  前几天，在读取一个数据量在28W多行的Excel的时候，在加载Excel的时候，报出了OutOfMemoryError：Java heap space的异常，出现这个问题的原因是使用POI读取Excel的时候，会创建大量的String对象，并且空的表格数据也会创建String对象，需要把所有的Excel一下全部加载到内存才会进行接下来的操作，就导致出">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-12-20T17:04:59.684Z">
+<meta name="twitter:card" content="summary">
+
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="theme-color" content="#9C27B0">
+  <meta name="description" content="学习总结，技术交流，人生感悟">
+  <meta name="keywords" content=",Excel">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="菜鸟逆袭日记">
+  <meta name="msapplication-starturl" content="http://yoursite.com/2019/12/21/20191221excel/">
+  <meta name="msapplication-navbutton-color" content="#9C27B0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="菜鸟逆袭日记">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
+
+  
+    <meta property="article:published_time" content="Sat Dec 21 2019 01:00:11 GMT+0800">
+    <meta property="article:modified_time" content="Sat Dec 21 2019 01:04:59 GMT+0800">
+  
+
+  
+    <link rel="canonical" href="http://yoursite.com/2019/12/21/20191221excel/">
+  
+
+ 
+  <link rel="stylesheet" href="/css/mdui.css">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="mdui-appbar-with-toolbar mdui-drawer-body-left mdui-theme-primary-brown mdui-theme-accent-blue">
+  <script>var a=localStorage.getItem("mdui-theme-layout-dark");if(a){document.getElementsByTagName("body")[0].className+=" mdui-theme-layout-dark"};</script>
+  <header id="header" class="mdui-appbar mdui-appbar-fixed mdui-appbar-scroll-hide mdui-appbar-inset">
+  <div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" target="_blank" rel="noopener" class="mdui-btn mdui-btn-icon" mdui-drawer="{target: '#sidebar', swipe: true}"><i class="mdui-icon material-icons">menu</i></a>
+    <a href="/" class="mdui-typo-headline">菜鸟逆袭日记</a>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:;" target="_blank" rel="noopener" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#search'}" mdui-tooltip="{content: '搜索'}"><i class="mdui-icon material-icons">search</i></a>
+    <a href="/atom.xml" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: 'RSS'}"><i class="mdui-icon material-icons">rss_feed</i></a>
+  </div>
+</header>
+<div class="mdui-dialog" id="search">
+  
+    <div class="search-form">
+      <input type="search" class="search-form-input" placeholder="请输入关键字">
+    </div>
+    <div class="search-result" data-resource="/search.xml"></div>
+  
+</div>
+  <aside id="sidebar" class="mdui-drawer mdui-drawer-full-height">
+  <div class="mdui-grid-tile">
+    <img src="/images/banner.png" style="height: 160px;">
+    <img src="/images/avatar.png" class="avatar-animation" style="position: absolute; top: 10%; left: 24px; width: 64px; height: 64px; border: 2px solid #fff; border-radius: 50%;">
+    <div class="mdui-grid-tile-actions">
+      <div class="mdui-grid-tile-text">
+        <div class="mdui-grid-tile-title">liulei</div>
+        <div class="mdui-grid-tile-subtitle"><i class="mdui-icon material-icons">art_track</i>我的编程之路</div>
+      </div>
+      
+        <div class="mdui-grid-tile-buttons">
+          <a href="mailto:1778533105@qq.com" target="_blank" rel="noopener" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '1778533105@qq.com'}"><i class="mdui-icon material-icons">email</i></a>
+        </div>
+      
+    </div>
+  </div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <a href="/" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-blue">home</i>
+      <div class="mdui-list-item-content">主页</div>
+    </a>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-deep-orange">inbox</i>
+        <div class="mdui-list-item-content">归档</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/archives/2019/12/">十二月 2019<span class="mdui-ripple sidebar_archives-count">2</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-green">chrome_reader_mode</i>
+        <div class="mdui-list-item-content">分类</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/categories/Excel%E5%A4%84%E7%90%86/">Excel处理<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/categories/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">博客搭建<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-brown">bookmark</i>
+        <div class="mdui-list-item-content">标签</div>
+        <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        <a class="mdui-ripple sidebar_archives-link" href="/tags/Excel/" rel="tag">Excel<span class="mdui-ripple sidebar_archives-count">1</span></a><a class="mdui-ripple sidebar_archives-link" href="/tags/hexo/" rel="tag">hexo<span class="mdui-ripple sidebar_archives-count">1</span></a>
+        
+      </div>
+    </div>
+    <a href="/about" class="mdui-list-item mdui-ripple">
+      <i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-purple">person</i>
+      <div class="mdui-list-item-content">关于</div>
+    </a>
+  </div>
+
+  <div class="mdui-divider"></div>
+
+  <div class="mdui-list" mdui-collapse="{accordion: true}">
+    <!--  -->
+    <div class="mdui-collapse-item">
+      <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+        <div class="mdui-list-item-content">友情链接</div>
+        <i class="mdui-list-item-icon mdui-icon material-icons">link</i>
+      </div>
+      <div class="mdui-collapse-item-body mdui-list mdui-list-dense">
+        
+        
+          <a href="javascript:;" target="_blank" rel="noopener" class="mdui-list-item mdui-ripple mdui-p-l-2 mdui-text-color-theme" style="justify-content: center;">链接为空</a>
+        
+      </div>
+    </div>
+  </div>
+</aside>
+  <main id="main" class="mdui-m-t-5 fadeIn animated">
+  <link rel="stylesheet" href="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.css">
+  <style>#main article .mdui-card-content .center-block{display:block!important;margin-right:auto!important;margin-left:auto!important}</style>
+  <article class="mdui-card mdui-m-b-5">
+    <header class="mdui-card-media">
+      <img src="/images/random/material-17.png" style="max-height: 240px;">
+      <div class="mdui-card-media-covered">
+        <div class="mdui-card-primary">
+          <div class="mdui-card-primary-title">POI读取大数据量Excel出现Java heap space</div>
+          <div class="mdui-card-primary-subtitle"><i class="iconfont">&#xe697;</i> 2019-12-21 / <i class="iconfont">&#xe601;</i> liulei &nbsp;&nbsp; <span id="busuanzi_container_page_pv" style="display: none;"><i class="iconfont">&#xe7fd;</i> <span id="busuanzi_value_page_pv"></span></span></div>
+        </div>
+      </div>
+      <div class="mdui-card-menu">
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#qrcode', align: 'right'}"><i class="mdui-icon material-icons">devices</i></button>
+          <ul class="mdui-menu" id="qrcode">
+            
+              <li class="mdui-menu-item"><a class="mdui-text-center mdui-ripple">发送到手机</a></li>
+            
+            <li class="mdui-menu-item" disabled>
+              
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACYElEQVR42u3aUW6DMBAE0Nz/0u0BqjgztjGkenyhNIV9RDKr8b5+/vXxwsPDw8PDw8PDexjvFR/vvv/383fX//v5h0LL2vDw8PBO8pLbjHljTFLu+L5JbXh4eHjneeNFf3z+jjcucfzCaGvDw8PDeyYvL6U9Tx4rHh4e3jfyittMNc14eHh438VrG9+Wl0cVt2UteHh4eDGv3QA7eX7D/h4eHh7ekLdhyCkoLl/oNw9d4eHh4V3Aa1vhpDmea5eToYTom3h4eHgX88al5Pg8gJhr3ItQAw8PD+84r13W85Y6v/62DTA8PDy8y3h5w9oOGbRbYnnzXWQteHh4eBfw5prmZHEfF7QS+24LI/Dw8PAWeO2Aaf5KmAtqky234sWAh4eHd5A3t/XVRsBtJXh4eHh38VaW4/xlUC/uU8ExHh4e3hne3HI8eePyr5MDXnh4eHg38fKYtW3B8w2tfAwLDw8P7yRvbtRpbjhg14PAw8PDu5fXbv/v+s5KfPzh+nh4eHgX8+bi1DyMyBf6NkrGw8PDu5eXt9H5Er8eN+Q/Ax4eHt553lyEutKOty+bbTEuHh4e3lbeSkO8Xu7KphoeHh7eeV5eaBv+tkNXbWiLh4eHd57XHu0YQf5f+bbZh8eNh4eHdzFvZUyqLb2NM9or4OHh4Z3kta3wrgHTImLAw8PDeyQvKTofk2qv1oYReHh4eN/Fmxuf2rDoJ68iPDw8vIfx5opuA9+ENDl0hYeHh7eVl4QRuwYI8seX/wx4eHh4J3ntBlhbdB7UzjX0eHh4eCd5/+/Aw8PDw8PDw8N7wPEL4dXEcAKDUwQAAAAASUVORK5CYII=">
+              
+            </li>
+          </ul>
+        
+        
+          <button class="mdui-btn mdui-btn-icon mdui-text-color-white" mdui-menu="{target: '#share_menu', align: 'right'}"><i class="mdui-icon material-icons">share</i></button>
+          <ul class="mdui-menu" id="share_menu">
+            <li class="mdui-menu-item">
+              <a href="http://service.weibo.com/share/share.php?appkey=&title=POI读取大数据量Excel出现Java heap space&url=http://yoursite.com/2019/12/21/20191221excel/&pic=http://yoursite.com/images/favicon.png&searchPic=false&style=simple" target="_blank" class="mdui-ripple">分享到微博</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://twitter.com/intent/tweet?text=POI读取大数据量Excel出现Java heap space&url=http://yoursite.com/2019/12/21/20191221excel/&via=liulei" target="_blank" class="mdui-ripple">分享到Twitter</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2019/12/21/20191221excel/" target="_blank" class="mdui-ripple">分享到Facebook</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://plus.google.com/share?url=http://yoursite.com/2019/12/21/20191221excel/" target="_blank" class="mdui-ripple">分享到Google+</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://yoursite.com/2019/12/21/20191221excel/&title=POI读取大数据量Excel出现Java heap space" target="_blank" class="mdui-ripple">分享到LinkedIn</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="http://connect.qq.com/widget/shareqq/index.html?site=菜鸟逆袭日记&title=POI读取大数据量Excel出现Java heap space&summary=学习总结，技术交流，人生感悟&pics=http://yoursite.com/images/favicon.png&url=http://yoursite.com/2019/12/21/20191221excel/" target="_blank" class="mdui-ripple">分享到QQ</a>
+            </li>
+            <li class="mdui-menu-item">
+              <a href="https://telegram.me/share/url?url=http://yoursite.com/2019/12/21/20191221excel/&text=POI读取大数据量Excel出现Java heap space" target="_blank" class="mdui-ripple">分享到Telegram</a>
+            </li>
+          </ul>
+        
+      </div>
+    </header>
+    <div class="mdui-card-content mdui-typo">
+      <blockquote>
+<p><font color="red">该篇文章处理的Excel格式为xlsx格式</font></p>
+</blockquote>
+<p>前几天，在读取一个数据量在28W多行的Excel的时候，在加载Excel的时候，报出了OutOfMemoryError：Java heap space的异常，出现这个问题的原因是使用POI读取Excel的时候，会创建大量的String对象，并且空的表格数据也会创建String对象，需要把所有的Excel一下全部加载到内存才会进行接下来的操作，就导致出现了内存溢出</p>
+<p>原始读取代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">FileInputStream in = <span class="keyword">new</span> FileInputStream(<span class="string">"xlsx路径"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">XSSFWorkbook wk = <span class="keyword">new</span> XSSFWorkbook(in);</span></pre></td></tr></table></figure>
+<p>之后查找了大量的博客，最后在stackoverflow上看到了一个问题类似的贴子，经过尝试，代码不会出现内存溢出的问题，但是又出现了另外一个问题</p>
+<p>采用Excel StreamingReader的方式进行加载，它不会一次性的加载到内存，而是使用一种流的方式，循环着加载<br>修改后的代码：<br>使用下面的代码之前，需要先引入一个jar包：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">          <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.monitorjbl<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">          <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>xlsx-streamer<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">          <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">      <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.monitorjbl.xlsx.StreamingReader;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">readExcel</span><span class="params">()</span></span>&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">		FileInputStream in = <span class="keyword">new</span> FileInputStream(<span class="string">"xlsx路径"</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">        Workbook wk = StreamingReader.builder()</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">                .rowCacheSize(<span class="number">100</span>)  <span class="comment">//缓存到内存中的行数，默认是10</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">                .bufferSize(<span class="number">4096</span>)  <span class="comment">//读取资源时，缓存到内存的字节大小，默认是1024</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">                .open(in);  <span class="comment">//打开资源，必须，可以是InputStream或者是File，注意：只能打开XLSX格式的文件</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">        Sheet sheet = wk.getSheetAt(<span class="number">0</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">        <span class="keyword">for</span> (Row row : sheet) &#123;<span class="comment">//遍历所有的行</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">            System.out.println(<span class="string">"开始遍历第"</span> + row.getRowNum() + <span class="string">"行数据："</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">            <span class="comment">//遍历所有的列</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">            <span class="keyword">for</span> (Cell cell : row) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">                System.out.print(cell.getStringCellValue() + <span class="string">" "</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">            &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">            System.out.println(<span class="string">" "</span>);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">        &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+<p>解决完了上一个问题后，又报出了java.lang.NoSuchFieldError：RAW_XML_FILE_HEADER的异常，之后Askru网站上查找到一个解决方案，大多数由于POI版本太低，需要POI版本在3.16+版本才不会出错，我将3.16版本升级为3.17之后就没有任何问题了</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">          <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.poi<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">          <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>poi<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">          <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.17<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">      <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span></pre></td></tr></table></figure>
+<p>参考链接：<br>[1] stackoverflow解决内存溢出：<a href="https://stackoverflow.com/questions/11891851/how-to-load-a-large-xlsx-file-with-apache-poi" target="_blank" rel="noopener">https://stackoverflow.com/questions/11891851/how-to-load-a-large-xlsx-file-with-apache-po</a></p>
+<p>[2] Askru解决RAW_XML_FILE_HEADER：<a href="https://askvoprosy.com/voprosy/nosuchfielderror-when-reading-excel-sheet-in-java" target="_blank" rel="noopener">https://askvoprosy.com/voprosy/nosuchfielderror-when-reading-excel-sheet-in-java</a></p>
+
+      <blockquote class="mdui-m-t-5">
+        
+        <strong>本文链接：</strong><a href="http://yoursite.com/2019/12/21/20191221excel/">http://yoursite.com/2019/12/21/20191221excel/</a>
+      </blockquote>
+      
+    </div>
+    <footer class="mdui-card-actions">
+      
+        <a class="mdui-ripple article_categories-link" href="/categories/Excel%E5%A4%84%E7%90%86/">Excel处理</a>
+      
+      
+        <a class="mdui-ripple article_tags-link" href="/tags/Excel/" rel="tag">Excel</a>
+      
+    </footer>
+    
+  </article>
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+  <script>$("#main article .mdui-card-content img.fancybox").on("click",function(e){$.fancybox.open({src:$(this).attr("src")});});</script>
+
+
+  <nav id="paginator">
+    
+    <div class="spacer"></div>
+    
+      <a rel="next" class="extend next" href="/2019/12/08/createhexo/">
+        下一篇&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button aria-label="next" class="mdui-btn mdui-btn-raised mdui-btn-dense mdui-btn-icon mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+      </a>
+    
+  </nav>
+
+
+
+</main>
+  <footer id="footer" class="mdui-m-t-5 mdui-p-y-3 mdui-color-theme">
+  <div class="mdui-p-y-0 mdui-text-center">
+    
+    
+    
+    
+    
+    
+    
+      <a href="https://github.com/liuleiStu" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe7ab;</i></a>
+    
+    
+    
+    
+    
+      <a href="tencent://message/?uin=1778533105&Menu=yes" target="_blank"><i class="mdui-p-a-1 mdui-icon iconfont mdui-text-color-theme-a100">&#xe651;</i></a>
+    
+    
+  </div>
+  <div class="mdui-p-y-1 mdui-text-center">
+    Copyright &copy; 2019 - 2019 liulei<br>
+    Powered by <a href="https://hexo.io/" target="_blank" class="mdui-text-color-theme-accent">Hexo</a>
+    
+  </div>
+</footer>
+  <button id="gotop" class="mdui-fab mdui-fab-fixed mdui-fab-hide mdui-ripple mdui-color-theme-accent"><i class="mdui-icon material-icons">arrow_upward</i></button>
+  <script async src="http://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <script src="/js/mdui.js"></script>
+<script src="/js/script.js"></script>
+</body>
+</html>
